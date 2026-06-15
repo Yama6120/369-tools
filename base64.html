@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Free Base64 encoder and decoder. Instant UTF-8 safe conversion with emoji and CJK support. 100% client-side — no data leaves your browser.">
     <title>Base64 Encoder / Decoder — 369 Tools</title>
     <link rel="canonical" href="https://yama6120.github.io/369-tools/base64.html">
     <style>
@@ -12,8 +13,8 @@
             --input: #334155;
             --text: #e2e8f0;
             --muted: #94a3b8;
-            --accent: #3b82f6;
-            --accent-hover: #60a5fa;
+            --accent: #1d4ed8;
+            --accent-hover: #2563eb;
             --success: #22c55e;
             --error: #ef4444;
         }
@@ -49,7 +50,7 @@
         .btn-primary:hover { background: var(--accent-hover); }
         .btn-secondary { background: #475569; color: var(--text); }
         .btn-secondary:hover { background: #64748b; }
-        .btn-copy { background: #166534; color: #4ade80; }
+        .btn-copy { background: #166534; color: #ffffff; }
         .btn-copy:hover { background: #15803d; }
         .status { font-size: 12px; color: var(--muted); margin-top: 8px; min-height: 18px; }
         .status.error { color: var(--error); }
@@ -71,7 +72,7 @@
     </script>
 </head>
 <body>
-    <div class="container">
+    <main class="container">
         <div class="header">
             <h1>Base64 Encoder / Decoder</h1>
             <p>Instant UTF-8 safe conversion • 100% client-side</p>
@@ -115,7 +116,7 @@
             </div>
         </div>
         <div class="footer">Works offline • No data leaves your browser • UTF-8 &amp; emoji supported</div>
-    </div>
+    </main>
     <script>
         function switchTab(tabIndex) {
             document.querySelectorAll('.tab').forEach((t, i) => t.classList.toggle('active', i === tabIndex));
