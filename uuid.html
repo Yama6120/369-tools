@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UUID v4 Generator - RFC4122 Compliant Random UUIDs</title>
+<meta name="description" content="A lightweight, client-side UUID v4 generator that produces RFC 4122 compliant identifiers using the Web Crypto API. No dependencies. Instant generation and one-click copy.">
+<link rel="canonical" href="https://yama6120.github.io/369-tools/uuid.html">
+<style>
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;max-width:640px;margin:40px auto;padding:0 20px;line-height:1.6;color:#222}
+h1{font-size:2rem;margin-bottom:8px}
+.container{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:32px;box-shadow:0 1px 3px rgba(0,0,0,.05)}
+.result{display:flex;gap:8px;margin:24px 0}
+input{flex:1;padding:14px 16px;font-size:1rem;font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;border:1px solid #d1d5db;border-radius:8px;background:#f9fafb}
+button{padding:14px 24px;font-size:1rem;font-weight:600;border:none;border-radius:8px;cursor:pointer;transition:all .1s ease}
+#generate{background:#111;color:#fff}
+#generate:hover{background:#000}
+#copy{background:#f3f4f6;color:#222;border:1px solid #d1d5db}
+#copy:hover{background:#e5e7eb}
+footer{margin-top:32px;font-size:.875rem;color:#666}
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"SoftwareApplication","name":"UUID v4 Generator","url":"https://yama6120.github.io/369-tools/uuid.html","applicationCategory":"UtilityApplication","operatingSystem":"Any"}
+</script>
+</head>
+<body>
+<div class="container">
+<h1>UUID v4 Generator</h1>
+<p>Generates RFC 4122 version 4 UUIDs using crypto.getRandomValues.</p>
+<div class="result">
+<input type="text" id="result" readonly placeholder="Click Generate to create a UUID" aria-label="Generated UUID">
+<button id="copy">Copy</button>
+</div>
+<button id="generate">Generate UUID v4</button>
+</div>
+<footer>
+<p>100% client-side. No data leaves your browser.</p>
+</footer>
+<script>
+window.genUuidV4 = function() {
+  const bytes = new Uint8Array(16);
+  crypto.getRandomValues(bytes);
+  bytes[6] = (bytes[6] & 0x0f) | 0x40;
+  bytes[8] = (bytes[8] & 0x3f) | 0x80;
+  const hex = Array.from(bytes, b => b.toString(16).padStart(2, '0')).join('');
+  return hex.slice(0, 8) + '-' + hex.slice(8, 12) + '-' + hex.slice(12, 16) + '-' + hex.slice(16, 20) + '-' + hex.slice(20);
+};
+
+const resultInput = document.getElementById('result');
+const generateBtn = document.getElementById('generate');
+const copyBtn = document.getElementById('copy');
+
+generateBtn.addEventListener('click', () => {
+  resultInput.value = window.genUuidV4();
+  resultInput.select();
+});
+
+copyBtn.addEventListener('click', async () => {
+  if (!resultInput.value) return;
+  try {
+    await navigator.clipboard.writeText(resultInput.value);
+    const originalText = copyBtn.textContent;
+    copyBtn.textContent = 'Copied!';
+    setTimeout(() => { copyBtn.textContent = originalText; }, 1500);
+  } catch (e) {
+    resultInput.select();
+    document.execCommand('copy');
+  }
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Base64 Encoder / Decoder — 369 Tools</title>
+    <link rel="canonical" href="https://yama6120.github.io/369-tools/base64.html">
+    <style>
+        :root {
+            --bg: #0f172a;
+            --card: #1e293b;
+            --input: #334155;
+            --text: #e2e8f0;
+            --muted: #94a3b8;
+            --accent: #3b82f6;
+            --accent-hover: #60a5fa;
+            --success: #22c55e;
+            --error: #ef4444;
+        }
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            padding: 0;
+            background: var(--bg);
+            color: var(--text);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            line-height: 1.5;
+        }
+        .container { max-width: 980px; margin: 40px auto; padding: 0 20px; }
+        .header { text-align: center; margin-bottom: 32px; }
+        .header h1 { font-size: 28px; font-weight: 600; margin: 0 0 8px 0; letter-spacing: -0.025em; }
+        .header p { color: var(--muted); margin: 0; font-size: 15px; }
+        .card { background: var(--card); border-radius: 16px; border: 1px solid #334155; box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.2); overflow: hidden; }
+        .tabs { display: flex; background: #0f172a; border-bottom: 1px solid #334155; }
+        .tab { flex: 1; padding: 16px 24px; text-align: center; font-weight: 600; font-size: 15px; cursor: pointer; transition: all 0.1s ease; border-bottom: 3px solid transparent; color: var(--muted); }
+        .tab.active { color: var(--text); border-bottom-color: var(--accent); background: var(--card); }
+        .tab:hover:not(.active) { background: #1e293b; }
+        .content { padding: 28px; }
+        .pane { display: none; }
+        .pane.active { display: block; }
+        .field { margin-bottom: 20px; }
+        .field label { display: block; font-size: 13px; font-weight: 600; color: var(--muted); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+        textarea { width: 100%; min-height: 160px; background: var(--input); border: 1px solid #475569; border-radius: 10px; padding: 16px; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 14px; color: var(--text); resize: vertical; line-height: 1.5; transition: border-color 0.15s ease; }
+        textarea:focus { outline: none; border-color: var(--accent); }
+        .output { background: #0f172a; border: 1px solid #475569; }
+        .actions { display: flex; gap: 12px; margin-top: 16px; flex-wrap: wrap; }
+        button { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 10px 20px; font-size: 14px; font-weight: 600; border-radius: 10px; border: none; cursor: pointer; transition: all 0.1s ease; }
+        .btn-primary { background: var(--accent); color: white; }
+        .btn-primary:hover { background: var(--accent-hover); }
+        .btn-secondary { background: #475569; color: var(--text); }
+        .btn-secondary:hover { background: #64748b; }
+        .btn-copy { background: #166534; color: #4ade80; }
+        .btn-copy:hover { background: #15803d; }
+        .status { font-size: 12px; color: var(--muted); margin-top: 8px; min-height: 18px; }
+        .status.error { color: var(--error); }
+        .status.success { color: var(--success); }
+        .footer { text-align: center; margin-top: 32px; font-size: 12px; color: var(--muted); }
+        @media (max-width: 640px) { .container { margin: 20px auto; } .content { padding: 20px; } }
+    </style>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "Base64 Encoder / Decoder",
+        "url": "https://yama6120.github.io/369-tools/base64.html",
+        "applicationCategory": "UtilityApplication",
+        "operatingSystem": "Any",
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+        "description": "Fast, client-side Base64 encoder and decoder with full UTF-8 support including emoji and CJK characters."
+    }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Base64 Encoder / Decoder</h1>
+            <p>Instant UTF-8 safe conversion • 100% client-side</p>
+        </div>
+        <div class="card">
+            <div class="tabs">
+                <div class="tab active" onclick="switchTab(0)">Encode</div>
+                <div class="tab" onclick="switchTab(1)">Decode</div>
+            </div>
+            <div id="encode-pane" class="content pane active">
+                <div class="field">
+                    <label>Text to Encode</label>
+                    <textarea id="encode-input" placeholder="Paste or type text here..." oninput="encodeLive()"></textarea>
+                </div>
+                <div class="field">
+                    <label>Base64 Output</label>
+                    <textarea id="encode-output" class="output" readonly placeholder="Base64 will appear here..."></textarea>
+                </div>
+                <div class="actions">
+                    <button class="btn-primary" onclick="encodeLive()">Encode</button>
+                    <button class="btn-copy" onclick="copyToClipboard('encode-output')">Copy</button>
+                    <button class="btn-secondary" onclick="clearFields('encode')">Clear</button>
+                </div>
+                <div id="encode-status" class="status"></div>
+            </div>
+            <div id="decode-pane" class="content pane">
+                <div class="field">
+                    <label>Base64 to Decode</label>
+                    <textarea id="decode-input" placeholder="Paste Base64 string here..." oninput="decodeLive()"></textarea>
+                </div>
+                <div class="field">
+                    <label>Decoded Text</label>
+                    <textarea id="decode-output" class="output" readonly placeholder="Decoded text will appear here..."></textarea>
+                </div>
+                <div class="actions">
+                    <button class="btn-primary" onclick="decodeLive()">Decode</button>
+                    <button class="btn-copy" onclick="copyToClipboard('decode-output')">Copy</button>
+                    <button class="btn-secondary" onclick="clearFields('decode')">Clear</button>
+                </div>
+                <div id="decode-status" class="status"></div>
+            </div>
+        </div>
+        <div class="footer">Works offline • No data leaves your browser • UTF-8 &amp; emoji supported</div>
+    </div>
+    <script>
+        function switchTab(tabIndex) {
+            document.querySelectorAll('.tab').forEach((t, i) => t.classList.toggle('active', i === tabIndex));
+            document.querySelectorAll('.pane').forEach((p, i) => p.classList.toggle('active', i === tabIndex));
+        }
+        function encodeLive() {
+            const input = document.getElementById('encode-input').value;
+            const output = document.getElementById('encode-output');
+            const status = document.getElementById('encode-status');
+            if (!input) { output.value = ''; status.textContent = ''; status.className = 'status'; return; }
+            try {
+                const utf8Bytes = new TextEncoder().encode(input);
+                let bin = '';
+                for (let i = 0; i < utf8Bytes.length; i++) bin += String.fromCharCode(utf8Bytes[i]);
+                output.value = btoa(bin);
+                status.textContent = '✓ Encoded successfully';
+                status.className = 'status success';
+            } catch (e) { output.value = ''; status.textContent = 'Encoding error'; status.className = 'status error'; }
+        }
+        function decodeLive() {
+            const input = document.getElementById('decode-input').value.trim();
+            const output = document.getElementById('decode-output');
+            const status = document.getElementById('decode-status');
+            if (!input) { output.value = ''; status.textContent = ''; status.className = 'status'; return; }
+            try {
+                const bin = atob(input.replace(/\s/g, ''));
+                const bytes = new Uint8Array(bin.length);
+                for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+                output.value = new TextDecoder().decode(bytes);
+                status.textContent = '✓ Decoded successfully';
+                status.className = 'status success';
+            } catch (e) { output.value = ''; status.textContent = 'Invalid Base64 string'; status.className = 'status error'; }
+        }
+        function copyToClipboard(elementId) {
+            const textarea = document.getElementById(elementId);
+            if (!textarea.value) return;
+            navigator.clipboard.writeText(textarea.value).then(() => {
+                const btn = document.querySelector('[onclick="copyToClipboard(\'' + elementId + '\')"]');
+                if (btn) { const orig = btn.textContent; btn.textContent = 'Copied!'; setTimeout(() => { btn.textContent = orig; }, 1200); }
+            }).catch(() => { textarea.select(); document.execCommand('copy'); });
+        }
+        function clearFields(mode) {
+            ['input', 'output'].forEach(s => { document.getElementById(mode + '-' + s).value = ''; });
+            const st = document.getElementById(mode + '-status');
+            st.textContent = ''; st.className = 'status';
+        }
+        window.onload = () => document.getElementById('encode-input').focus();
+        window.testRoundtrip = function(str) {
+            try {
+                const b = new TextEncoder().encode(str);
+                let bin = ''; for (let i = 0; i < b.length; i++) bin += String.fromCharCode(b[i]);
+                const b64 = btoa(bin);
+                const bin2 = atob(b64);
+                const bytes2 = new Uint8Array(bin2.length);
+                for (let i = 0; i < bin2.length; i++) bytes2[i] = bin2.charCodeAt(i);
+                return new TextDecoder().decode(bytes2) === str;
+            } catch(e) { return false; }
+        };
+    </script>
+</body>
+</html>
